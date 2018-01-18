@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -54,7 +55,7 @@ public class AccountController {
         }
     }
     @RequestMapping(value = "/test/{accountNumber}", method = RequestMethod.POST)
-    public void sampleRequest(@PathVariable("accountNumber") String accountNumber, @RequestBody InterBankTransfer transfer) throws NotFoundException, UnauthorizedException {
+    public void sampleRequest(@PathVariable("accountNumber") String accountNumber, @RequestBody InterBankTransfer transfer) throws NotFoundException, UnauthorizedException, IOException, ValidationException {
         try {
             accountClient.interBankTransferRequest(transfer, accountNumber);
         } catch (AccountNotFoundException e) {

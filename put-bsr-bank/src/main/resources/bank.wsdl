@@ -1,9 +1,9 @@
 <definitions name="BankService"
              xmlns="http://schemas.xmlsoap.org/wsdl/"
-             xmlns:tns = "http://www.bank.com/wsdl"
+             xmlns:tns = "http://www.bank.com/bank"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
              xmlns:types="http://www.bank.com/types"
-             targetNamespace="http://www.bank.com/wsdl">
+             targetNamespace="http://www.bank.com/bank">
     <types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema">
             <import namespace="http://www.bank.com/types" schemaLocation="types.xsd" />
@@ -11,55 +11,55 @@
     </types>
 
     <message name="HistoryRequest">
-        <part name="payload" type="types:historyRequestType" />
+        <part name="payload" element="types:historyRequest" />
     </message>
 
     <message name="HistoryResponse">
-        <part name="payload" type="types:historyResponseType" />
+        <part name="payload" element="types:historyResponse" />
     </message>
 
     <message name="TransferRequest">
-        <part name="payload" type="types:transferRequestType" />
+        <part name="payload" element="types:transferRequest" />
     </message>
 
     <message name="PaymentRequest">
-        <part name="payload" type="types:paymentRequestType" />
+        <part name="payload" element="types:paymentRequest" />
     </message>
 
     <message name="WithdrawRequest">
-        <part name="payload" type="types:withdrawRequestType" />
+        <part name="payload" element="types:withdrawRequest" />
     </message>
 
     <message name="OperationResponse">
-        <part name="payload" type="types:operationResponseType" />
+        <part name="payload" element="types:operationResponse" />
     </message>
 
     <portType name="BankServicePortType">
-        <operation name="History">
-            <input message="HistoryRequest"/>
-            <output message="HistoryResponse"/>
+        <operation name="history">
+            <input message="tns:HistoryRequest"/>
+            <output message="tns:HistoryResponse"/>
         </operation>
 
-        <operation name="Transfer">
-            <input message="TransferRequest"/>
-            <output message="OperationResponse"/>
+        <operation name="transfer">
+            <input message="tns:TransferRequest"/>
+            <output message="tns:OperationResponse"/>
         </operation>
 
-        <operation name="Payment">
-            <input message="PaymentRequest"/>
-            <output message="OperationResponse"/>
+        <operation name="payment">
+            <input message="tns:PaymentRequest"/>
+            <output message="tns:OperationResponse"/>
         </operation>
 
-        <operation name="Withdraw">
-            <input message="WithdrawRequest"/>
-            <output message="OperationResponse"/>
+        <operation name="withdraw">
+            <input message="tns:WithdrawRequest"/>
+            <output message="tns:OperationResponse"/>
         </operation>
     </portType>
     
     <binding name="BankSoapBinding" type="tns:BankServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <operation name="Transfer">
-            <soap:operation soapAction="transfer"/>
+        <operation name="transfer">
+            <soap:operation soapAction="http://www.bank.com/bank/transfer"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -68,8 +68,8 @@
             </output>
         </operation>
 
-        <operation name="History">
-            <soap:operation soapAction="history"/>
+        <operation name="history">
+            <soap:operation soapAction="http://www.bank.com/bank/history"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -78,8 +78,8 @@
             </output>
         </operation>
 
-        <operation name="Payment">
-            <soap:operation soapAction="payment"/>
+        <operation name="payment">
+            <soap:operation soapAction="http://www.bank.com/bank/payment"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -88,8 +88,8 @@
             </output>
         </operation>
 
-        <operation name="Withdraw">
-            <soap:operation soapAction="withdraw"/>
+        <operation name="withdraw">
+            <soap:operation soapAction="http://www.bank.com/bank/withdraw"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -101,7 +101,7 @@
     
     <service name="BankService">
         <documentation>Bank Service</documentation>
-        <port name="BankPort" binding="BankSoapBinding">
+        <port name="BankPort" binding="tns:BankSoapBinding">
             <soap:address location="http://localhost:8080/bank"/>
         </port>
     </service>
