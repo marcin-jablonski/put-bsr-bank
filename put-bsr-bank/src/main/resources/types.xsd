@@ -1,64 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.bank.com/types" targetNamespace="http://www.bank.com/types">
-	<xs:complexType name="historyRequestType">
-		<xs:sequence>
-			<xs:element name="accountNumber" type="xs:string"/>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="HistoryRequest" >
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="accountNumber" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="historyRequest" type="historyRequestType" />
-	
-	<xs:complexType name="historyResponseType">
-		<xs:sequence>
-			<xs:element name="historyEntry" type="historyEntryType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="HistoryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="history" type="HistoryEntry" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:element name="historyResponse" type="historyResponseType"/>
-	
-	<xs:complexType name="historyEntryType">
+	<xs:complexType name="HistoryEntry">
 		<xs:sequence>
 			<xs:element name="title" type="xs:string"/>
 			<xs:element name="amount" type="xs:int"/>
 			<xs:element name="source" type="xs:string"/>
-			<xs:element name="balance" type="xs:string"/>
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="transferRequestType">
-		<xs:sequence>
-			<xs:element name="sourceAccount" type="xs:string" />
-			<xs:element name="destinationAccount" type="xs:string" />
-			<xs:element name="amount" type="xs:int" />
-			<xs:element name="title" type="xs:string" />
+			<xs:element name="balance" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
 
-    <xs:element name="transferRequest" type="transferRequestType"/>
-	
-	<xs:complexType name="operationResponseType">
-		<xs:sequence>
-			<xs:element name="message" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="TransferRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sourceAccount" type="xs:string" />
+                <xs:element name="destinationAccount" type="xs:string" />
+                <xs:element name="amount" type="xs:int" />
+                <xs:element name="title" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:element name="operationResponse" type="operationResponseType"/>
-	
-	<xs:complexType name="paymentRequestType">
-		<xs:sequence>
-			<xs:element name="amount" type="xs:int" />
-			<xs:element name="account" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="PaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:element name="paymentRequest" type="paymentRequestType"/>
-	
-	<xs:complexType name="withdrawRequestType">
-		<xs:sequence>
-			<xs:element name="amount" type="xs:int" />
-			<xs:element name="account" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="WithdrawResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:element name="withdrawRequest" type="withdrawRequestType"/>
+    <xs:element name="TransferResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="PaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="amount" type="xs:int" />
+                <xs:element name="account" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="WithdrawRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="amount" type="xs:int" />
+                <xs:element name="account" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
