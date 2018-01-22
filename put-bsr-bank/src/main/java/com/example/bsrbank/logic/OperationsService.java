@@ -5,6 +5,7 @@ import com.bank.types.TransferRequest;
 import com.bank.types.WithdrawRequest;
 import com.example.bsrbank.logic.exceptions.AccountNotFoundException;
 import com.example.bsrbank.logic.exceptions.InsufficientFundsException;
+import com.example.bsrbank.logic.exceptions.OperationUnavailableException;
 import com.example.bsrbank.logic.exceptions.ValidationException;
 import com.example.bsrbank.model.Transaction;
 import com.example.bsrbank.rest.client.AccountClient;
@@ -23,9 +24,13 @@ public class OperationsService {
     @Autowired
     private AccountClient accountClient;
 
-    public void handleTransfer(TransferRequest transferRequest) throws AccountNotFoundException, UnauthorizedException, IOException, ValidationException, InsufficientFundsException {
+    public void handleTransfer(TransferRequest transferRequest) throws AccountNotFoundException, UnauthorizedException, IOException, ValidationException, InsufficientFundsException, OperationUnavailableException {
         if (!accountsService.accountHasEnoughBalance(transferRequest.getSourceAccount(), transferRequest.getAmount())) {
             throw new InsufficientFundsException();
+        }
+
+        if (transferRequest.getSourceAccount().equals(transferRequest.getDestinationAccount())) {
+            throw new OperationUnavailableException();
         }
 
         if (transferRequest.getDestinationAccount().substring(2, 10).equals(BanksService.BANK_ID)) {
