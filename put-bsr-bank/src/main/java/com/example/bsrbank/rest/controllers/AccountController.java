@@ -31,16 +31,6 @@ public class AccountController {
     @Autowired
     private RequestValidator requestValidator;
 
-    @RequestMapping(value = "/accounts/{accountNumber}/history", method = RequestMethod.GET)
-    public List<Transaction> getHistory(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable("accountNumber") String accountNumber) throws NotFoundException, UnauthorizedException {
-        authenticationService.checkCredentials(authorizationHeader);
-        try {
-            return accountsService.getAccountHistory(accountNumber);
-        } catch (AccountNotFoundException e) {
-            throw new NotFoundException();
-        }
-    }
-
     @RequestMapping(value = "/accounts/{accountNumber}/history", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void postToHistory(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable("accountNumber") String accountNumber, @RequestBody InterBankTransfer transfer) throws NotFoundException, UnauthorizedException, InvalidAccountException, InvalidAmountException, InvalidTitleException, InvalidNameException {
@@ -50,14 +40,6 @@ public class AccountController {
 
         try {
             accountsService.addTransactionToHistory(accountNumber, tr);
-        } catch (AccountNotFoundException e) {
-            throw new NotFoundException();
-        }
-    }
-    @RequestMapping(value = "/test/{accountNumber}", method = RequestMethod.POST)
-    public void sampleRequest(@PathVariable("accountNumber") String accountNumber, @RequestBody InterBankTransfer transfer) throws NotFoundException, UnauthorizedException, IOException, ValidationException {
-        try {
-            accountClient.interBankTransferRequest(transfer, accountNumber);
         } catch (AccountNotFoundException e) {
             throw new NotFoundException();
         }
