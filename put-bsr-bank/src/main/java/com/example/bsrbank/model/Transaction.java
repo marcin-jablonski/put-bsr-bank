@@ -1,24 +1,27 @@
 package com.example.bsrbank.model;
 
+import com.bank.types.HistoryEntry;
+import com.bank.types.TransferRequest;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "history")
 public class Transaction {
 
-    public Transaction(int amount, String title, String sourceAccountNumber, String destinationAccountNumber, Account account) {
+    public Transaction(int amount, String title, String source, int balance, Account account) {
         this.amount = amount;
         this.title = title;
-        this.sourceAccountNumber = sourceAccountNumber;
-        this.destinationAccountNumber = destinationAccountNumber;
+        this.source = source;
+        this.balance = balance;
         this.account = account;
     }
 
-    public Transaction(int amount, String title, String sourceAccountNumber, String destinationAccountNumber) {
+    public Transaction(int amount, String title, String source) {
         this.amount = amount;
         this.title = title;
-        this.sourceAccountNumber = sourceAccountNumber;
-        this.destinationAccountNumber = destinationAccountNumber;
+        this.source = source;
+        this.balance = 0;
         this.account = null;
     }
 
@@ -33,9 +36,9 @@ public class Transaction {
 
     private String title;
 
-    private String sourceAccountNumber;
+    private String source;
 
-    private String destinationAccountNumber;
+    private int balance;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_number", referencedColumnName = "no")
@@ -65,20 +68,20 @@ public class Transaction {
         this.title = title;
     }
 
-    public String getSourceAccountNumber() {
-        return sourceAccountNumber;
+    public String getSource() {
+        return source;
     }
 
-    public void setSourceAccountNumber(String sourceAccountNumber) {
-        this.sourceAccountNumber = sourceAccountNumber;
+    public void setSource(String source) {
+        this.source = source;
     }
 
-    public String getDestinationAccountNumber() {
-        return destinationAccountNumber;
+    public int getBalance() {
+        return balance;
     }
 
-    public void setDestinationAccountNumber(String destinationAccountNumber) {
-        this.destinationAccountNumber = destinationAccountNumber;
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public Account getAccount() {
@@ -88,4 +91,14 @@ public class Transaction {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    public static HistoryEntry toHistoryEntry(final Transaction transaction) {
+        HistoryEntry entry = new HistoryEntry();
+        entry.setAmount(transaction.amount);
+        entry.setBalance(transaction.balance);
+        entry.setSource(transaction.source);
+        entry.setTitle(transaction.title);
+        return entry;
+    }
+
 }

@@ -10,9 +10,11 @@ import java.util.Hashtable;
 public class BanksService {
     private Dictionary<String, String> banksAddresses;
 
+    public static String BANK_ID = "00117270";
+
     BanksService() {
         banksAddresses = new Hashtable<>();
-        banksAddresses.put("117270", "http://localhost:8080/");
+        banksAddresses.put("117271", "http://localhost:8080/");
     }
 
     public String getBankId(String accountNumber) {

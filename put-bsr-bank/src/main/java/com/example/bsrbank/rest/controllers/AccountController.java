@@ -45,8 +45,8 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postToHistory(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable("accountNumber") String accountNumber, @RequestBody InterBankTransfer transfer) throws NotFoundException, UnauthorizedException, InvalidAccountException, InvalidAmountException, InvalidTitleException, InvalidNameException {
         authenticationService.checkCredentials(authorizationHeader);
-        requestValidator.validate(transfer);
-        Transaction tr = new Transaction(transfer.getAmount(), transfer.getTitle(), transfer.getSource_account(), accountNumber);
+        requestValidator.validateIncoming(transfer);
+        Transaction tr = new Transaction(transfer.getAmount(), transfer.getTitle(), transfer.getSource_account());
 
         try {
             accountsService.addTransactionToHistory(accountNumber, tr);

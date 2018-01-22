@@ -58,8 +58,15 @@ public class AccountsService {
         account.setBalance(currentBalance);
 
         transaction.setAccount(account);
+        transaction.setBalance(currentBalance);
 
         accountRepository.save(account);
         historyRepository.save(transaction);
+    }
+
+    public boolean accountHasEnoughBalance(String accountNumber, int amount) throws AccountNotFoundException {
+        Account account = getAccount(accountNumber);
+
+        return account.getBalance() >= amount;
     }
 }
