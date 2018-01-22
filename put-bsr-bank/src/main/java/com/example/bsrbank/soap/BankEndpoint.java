@@ -47,7 +47,7 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "TransferRequest")
     @ResponsePayload
-    public TransferResponse makeTransfer(@RequestPayload TransferRequest payload) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException, InsufficientFundsException {
+    public TransferResponse makeTransfer(@RequestPayload TransferRequest payload) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException, InsufficientFundsException, OperationUnavailableException {
         validationService.validateTransferRequest(payload);
         TransferResponse response = new TransferResponse();
         operationsService.handleTransfer(payload);
