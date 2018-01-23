@@ -10,11 +10,19 @@ public class LoginForm {
     private JTextField textField1;
     private JTextField textField2;
 
+    private static JFrame self;
+
     public LoginForm() {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                JFrame frame = new JFrame("MainWindowFrame");
+                frame.setContentPane(new MainWindowForm().panel1);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                frame.setLocationRelativeTo(null);
+                frame.pack();
+                frame.setVisible(true);
+                self.setVisible(false);
             }
         });
     }
@@ -26,5 +34,6 @@ public class LoginForm {
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+        self = frame;
     }
 }
