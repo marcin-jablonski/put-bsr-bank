@@ -8,6 +8,7 @@ import com.example.bsrbank.logic.exceptions.InsufficientFundsException;
 import com.example.bsrbank.logic.exceptions.OperationUnavailableException;
 import com.example.bsrbank.logic.exceptions.ValidationException;
 import com.example.bsrbank.model.Transaction;
+import com.example.bsrbank.model.User;
 import com.example.bsrbank.rest.client.AccountClient;
 import com.example.bsrbank.rest.exceptions.UnauthorizedException;
 import com.example.bsrbank.rest.model.InterBankTransfer;
@@ -24,7 +25,7 @@ public class OperationsService {
     @Autowired
     private AccountClient accountClient;
 
-    public void handleTransfer(TransferRequest transferRequest) throws AccountNotFoundException, UnauthorizedException, IOException, ValidationException, InsufficientFundsException, OperationUnavailableException {
+    public void handleTransfer(TransferRequest transferRequest, User user) throws AccountNotFoundException, UnauthorizedException, IOException, ValidationException, InsufficientFundsException, OperationUnavailableException {
         if (!accountsService.accountHasEnoughBalance(transferRequest.getSourceAccount(), transferRequest.getAmount())) {
             throw new InsufficientFundsException();
         }
@@ -36,7 +37,7 @@ public class OperationsService {
         if (transferRequest.getDestinationAccount().substring(2, 10).equals(BanksService.BANK_ID)) {
             handleInternalTransfer(transferRequest);
         } else {
-            handleExternalTransfer(transferRequest);
+            handleExternalTransfer(transferRequest, user.getName());
         }
     }
 
@@ -55,12 +56,12 @@ public class OperationsService {
         accountsService.addTransactionToHistory(transferRequest.getDestinationAccount(), incomingTransaction);
     }
 
-    private void handleExternalTransfer(TransferRequest transferRequest) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException {
+    private void handleExternalTransfer(TransferRequest transferRequest, String userName) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException {
         InterBankTransfer interBankTransfer = new InterBankTransfer();
         interBankTransfer.setAmount(transferRequest.getAmount());
         interBankTransfer.setSource_account(transferRequest.getSourceAccount());
         interBankTransfer.setTitle(transferRequest.getTitle());
-        interBankTransfer.setName("What goes here?");
+        interBankTransfer.setName(userName);
 
         accountClient.interBankTransferRequest(interBankTransfer, transferRequest.getDestinationAccount());
 

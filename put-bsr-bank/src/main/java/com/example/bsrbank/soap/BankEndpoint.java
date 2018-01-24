@@ -78,7 +78,7 @@ public class BankEndpoint {
         User user = processAuthorizationHeader(authorizationHeaderElement);
         validationService.validateTransferRequest(payload, user);
         TransferResponse response = new TransferResponse();
-        operationsService.handleTransfer(payload);
+        operationsService.handleTransfer(payload, user);
         response.setMessage("Transfer accepted");
         return response;
     }
