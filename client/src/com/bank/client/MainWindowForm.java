@@ -5,6 +5,7 @@ import com.bank.types.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MainWindowForm {
     public JPanel panel1;
@@ -30,7 +31,15 @@ public class MainWindowForm {
 
     private BankPortType bankPort;
 
-    public MainWindowForm() {
+    public MainWindowForm(List<String> accounts) {
+
+        DefaultListModel<String> model = new DefaultListModel<>();
+        accountList.setModel(model);
+
+        for (String accountNo :
+                accounts) {
+            model.addElement(accountNo);
+        }
 
         BankPortTypeService service = new BankPortTypeService();
         bankPort = service.getBankPortTypeSoap11();

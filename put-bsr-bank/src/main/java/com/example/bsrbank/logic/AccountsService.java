@@ -6,6 +6,7 @@ import com.example.bsrbank.logic.exceptions.AccountAlreadyExistsException;
 import com.example.bsrbank.logic.exceptions.AccountNotFoundException;
 import com.example.bsrbank.model.Account;
 import com.example.bsrbank.model.Transaction;
+import com.example.bsrbank.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,5 +69,9 @@ public class AccountsService {
         Account account = getAccount(accountNumber);
 
         return account.getBalance() >= amount;
+    }
+
+    public List<Account> getUserAccounts(User user) {
+        return accountRepository.findAccountsByUser(user);
     }
 }

@@ -3,9 +3,12 @@ package com.example.bsrbank.soap;
 import com.bank.types.*;
 import com.example.bsrbank.logic.AccountsService;
 import com.example.bsrbank.logic.OperationsService;
+import com.example.bsrbank.logic.UsersService;
 import com.example.bsrbank.logic.ValidationService;
 import com.example.bsrbank.logic.exceptions.*;
+import com.example.bsrbank.model.Account;
 import com.example.bsrbank.model.Transaction;
+import com.example.bsrbank.model.User;
 import com.example.bsrbank.rest.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -21,6 +24,9 @@ public class BankEndpoint {
     private static final String NAMESPACE_URI = "http://www.bank.com/types";
 
     @Autowired
+    private UsersService usersService;
+
+    @Autowired
     private AccountsService accountsService;
 
     @Autowired
@@ -28,6 +34,20 @@ public class BankEndpoint {
 
     @Autowired
     private ValidationService validationService;
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "LoginRequest")
+    @ResponsePayload
+    public LoginResponse login(@RequestPayload LoginRequest payload) {
+        LoginResponse response = new LoginResponse();
+        User user = usersService.getUser("Marcin");
+        List<Account> userAccounts = accountsService.getUserAccounts(user);
+        for (Account account :
+                userAccounts) {
+            response.getAccounts().add(account.getNo());
+        }
+        return response;
+
+    }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HistoryRequest")
     @ResponsePayload
