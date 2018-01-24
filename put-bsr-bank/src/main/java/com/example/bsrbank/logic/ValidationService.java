@@ -3,28 +3,35 @@ package com.example.bsrbank.logic;
 import com.bank.types.PaymentRequest;
 import com.bank.types.TransferRequest;
 import com.bank.types.WithdrawRequest;
-import com.example.bsrbank.logic.exceptions.InvalidAccountException;
-import com.example.bsrbank.logic.exceptions.InvalidAmountException;
-import com.example.bsrbank.logic.exceptions.InvalidNameException;
-import com.example.bsrbank.logic.exceptions.InvalidTitleException;
+import com.example.bsrbank.logic.exceptions.*;
+import com.example.bsrbank.model.Account;
+import com.example.bsrbank.model.User;
 import org.iban4j.IbanUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ValidationService {
-    public void validateTransferRequest(TransferRequest request) throws InvalidAmountException, InvalidTitleException, InvalidAccountException {
+
+    @Autowired
+    private AccountsService accountsService;
+
+    public void validateTransferRequest(TransferRequest request, User user) throws InvalidAmountException, InvalidTitleException, InvalidAccountException, AccountNotFoundException, OperationUnavailableException {
+        validateAccountOwner(request.getSourceAccount(), user);
         validateAccountNumber(request.getDestinationAccount());
         validateAccountNumber(request.getSourceAccount());
         validateTitle(request.getTitle());
         validateAmount(request.getAmount());
     }
 
-    public void validatePaymentRequest(PaymentRequest request) throws InvalidAccountException, InvalidAmountException {
+    public void validatePaymentRequest(PaymentRequest request, User user) throws InvalidAccountException, InvalidAmountException, AccountNotFoundException, OperationUnavailableException {
+        validateAccountOwner(request.getAccount(), user);
         validateAmount(request.getAmount());
         validateAccountNumber(request.getAccount());
     }
 
-    public void validateWithdrawRequest(WithdrawRequest request) throws InvalidAccountException, InvalidAmountException {
+    public void validateWithdrawRequest(WithdrawRequest request, User user) throws InvalidAccountException, InvalidAmountException, AccountNotFoundException, OperationUnavailableException {
+        validateAccountOwner(request.getAccount(), user);
         validateAmount(request.getAmount());
         validateAccountNumber(request.getAccount());
     }
@@ -55,6 +62,13 @@ public class ValidationService {
     public void validateAmount(Integer amount) throws InvalidAmountException {
         if (amount < 1) {
             throw new InvalidAmountException();
+        }
+    }
+
+    public void validateAccountOwner(String accountNumber, User user) throws OperationUnavailableException, AccountNotFoundException {
+        Account account = accountsService.getAccount(accountNumber);
+        if (!(account.getUser() == user)) {
+            throw new OperationUnavailableException();
         }
     }
 }

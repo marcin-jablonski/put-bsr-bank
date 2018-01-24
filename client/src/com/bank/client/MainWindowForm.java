@@ -42,6 +42,7 @@ public class MainWindowForm {
         }
 
         BankPortTypeService service = new BankPortTypeService();
+        service.setHandlerResolver(new CustomHeaderHandler());
         bankPort = service.getBankPortTypeSoap11();
 
         getHistoryButton.addActionListener(new ActionListener() {

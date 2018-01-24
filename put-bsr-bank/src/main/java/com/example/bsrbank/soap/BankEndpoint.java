@@ -15,7 +15,12 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,9 +42,9 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "LoginRequest")
     @ResponsePayload
-    public LoginResponse login(@RequestPayload LoginRequest payload) {
+    public LoginResponse login(@SoapHeader("{http://www.bank.com/types}AuthorizationHeader") SoapHeaderElement authorizationHeaderElement) throws UnauthorizedException, AccountNotFoundException {
+        User user = processAuthorizationHeader(authorizationHeaderElement);
         LoginResponse response = new LoginResponse();
-        User user = usersService.getUser("Marcin");
         List<Account> userAccounts = accountsService.getUserAccounts(user);
         for (Account account :
                 userAccounts) {
@@ -51,7 +56,9 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HistoryRequest")
     @ResponsePayload
-    public HistoryResponse getHistory(@RequestPayload HistoryRequest payload) throws AccountNotFoundException, InvalidAccountException {
+    public HistoryResponse getHistory(@RequestPayload HistoryRequest payload, @SoapHeader("{http://www.bank.com/types}AuthorizationHeader") SoapHeaderElement authorizationHeaderElement) throws AccountNotFoundException, InvalidAccountException, OperationUnavailableException, UnauthorizedException {
+        User user = processAuthorizationHeader(authorizationHeaderElement);
+        validationService.validateAccountOwner(payload.getAccountNumber(), user);
         validationService.validateAccountNumber(payload.getAccountNumber());
         HistoryResponse response = new HistoryResponse();
 
@@ -67,8 +74,9 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "TransferRequest")
     @ResponsePayload
-    public TransferResponse makeTransfer(@RequestPayload TransferRequest payload) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException, InsufficientFundsException, OperationUnavailableException {
-        validationService.validateTransferRequest(payload);
+    public TransferResponse makeTransfer(@RequestPayload TransferRequest payload, @SoapHeader("{http://www.bank.com/types}AuthorizationHeader") SoapHeaderElement authorizationHeaderElement) throws AccountNotFoundException, IOException, UnauthorizedException, ValidationException, InsufficientFundsException, OperationUnavailableException {
+        User user = processAuthorizationHeader(authorizationHeaderElement);
+        validationService.validateTransferRequest(payload, user);
         TransferResponse response = new TransferResponse();
         operationsService.handleTransfer(payload);
         response.setMessage("Transfer accepted");
@@ -77,8 +85,9 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "PaymentRequest")
     @ResponsePayload
-    public PaymentResponse makePayment(@RequestPayload PaymentRequest payload) throws AccountNotFoundException, InvalidAccountException, InvalidAmountException {
-        validationService.validatePaymentRequest(payload);
+    public PaymentResponse makePayment(@RequestPayload PaymentRequest payload, @SoapHeader("{http://www.bank.com/types}AuthorizationHeader") SoapHeaderElement authorizationHeaderElement) throws AccountNotFoundException, InvalidAccountException, InvalidAmountException, UnauthorizedException, OperationUnavailableException {
+        User user = processAuthorizationHeader(authorizationHeaderElement);
+        validationService.validatePaymentRequest(payload, user);
         PaymentResponse response = new PaymentResponse();
         operationsService.handlePayment(payload);
         response.setMessage("Payment accepted");
@@ -87,11 +96,26 @@ public class BankEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "WithdrawRequest")
     @ResponsePayload
-    public WithdrawResponse makePayment(@RequestPayload WithdrawRequest payload) throws AccountNotFoundException, InvalidAccountException, InvalidAmountException, InsufficientFundsException {
-        validationService.validateWithdrawRequest(payload);
+    public WithdrawResponse makePayment(@RequestPayload WithdrawRequest payload, @SoapHeader("{http://www.bank.com/types}AuthorizationHeader") SoapHeaderElement authorizationHeaderElement) throws AccountNotFoundException, InvalidAccountException, InvalidAmountException, InsufficientFundsException, OperationUnavailableException, UnauthorizedException {
+        User user = processAuthorizationHeader(authorizationHeaderElement);
+        validationService.validateWithdrawRequest(payload, user);
         WithdrawResponse response = new WithdrawResponse();
         operationsService.handleWithdraw(payload);
         response.setMessage("Withdrawal accepted");
         return response;
+    }
+
+    private User processAuthorizationHeader(SoapHeaderElement authorizationHeaderElement) throws UnauthorizedException, AccountNotFoundException {
+        AuthorizationHeader authorization;
+        try {
+            JAXBContext context = JAXBContext.newInstance(AuthorizationHeader.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            authorization = (AuthorizationHeader) unmarshaller.unmarshal(authorizationHeaderElement.getSource());
+        } catch (JAXBException ex) {
+            throw new UnauthorizedException();
+        }
+
+        usersService.authorize(authorization.getUsername(), authorization.getPassword());
+        return usersService.getUser(authorization.getUsername());
     }
 }

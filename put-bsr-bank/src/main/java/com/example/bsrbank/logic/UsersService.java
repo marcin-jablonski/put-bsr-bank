@@ -16,7 +16,7 @@ public class UsersService {
         return userRepository.findByName(username);
     }
 
-    private void authorize(String username, String password) throws AccountNotFoundException, UnauthorizedException {
+    public void authorize(String username, String password) throws AccountNotFoundException, UnauthorizedException {
         User user = userRepository.findByName(username);
 
         if (user == null) {
