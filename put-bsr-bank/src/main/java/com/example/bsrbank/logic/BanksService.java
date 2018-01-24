@@ -2,6 +2,10 @@ package com.example.bsrbank.logic;
 
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -14,7 +18,17 @@ public class BanksService {
 
     BanksService() {
         banksAddresses = new Hashtable<>();
-        banksAddresses.put("117271", "http://localhost:8080/");
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("C:\\Projekty\\put-bsr-bank\\put-bsr-bank\\src\\main\\java\\com\\example\\bsrbank\\banks.csv"));
+            String line = "";
+            while((line = reader.readLine()) != null) {
+                String[] bankData = line.split(",");
+                banksAddresses.put(bankData[0], bankData[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getBankId(String accountNumber) {
@@ -22,7 +36,6 @@ public class BanksService {
     }
 
     public String getBankUrl(String bankId) {
-        String trimmedId = bankId.replaceFirst("^0+(?!$)", "");
-        return banksAddresses.get(trimmedId);
+        return banksAddresses.get(bankId);
     }
 }
