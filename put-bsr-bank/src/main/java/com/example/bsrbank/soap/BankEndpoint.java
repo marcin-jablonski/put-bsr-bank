@@ -24,6 +24,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.util.List;
 
+// SOAP endpoint implementation
 @Endpoint
 public class BankEndpoint {
     private static final String NAMESPACE_URI = "http://www.bank.com/types";

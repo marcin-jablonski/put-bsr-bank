@@ -7,6 +7,7 @@ import com.example.bsrbank.rest.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//handle tasks connected to users data
 @Service
 public class UsersService {
     @Autowired

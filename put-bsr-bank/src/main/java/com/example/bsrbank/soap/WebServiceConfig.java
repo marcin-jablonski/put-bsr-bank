@@ -14,6 +14,7 @@ import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
+// SOAP WS configuration class
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {

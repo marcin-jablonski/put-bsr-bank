@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+// Handle all bank operations
 @Service
 public class OperationsService {
     @Autowired

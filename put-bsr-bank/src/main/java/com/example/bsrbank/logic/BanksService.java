@@ -10,6 +10,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+// handle tasks connected to banks data
 @Service
 public class BanksService {
     private Dictionary<String, String> banksAddresses;

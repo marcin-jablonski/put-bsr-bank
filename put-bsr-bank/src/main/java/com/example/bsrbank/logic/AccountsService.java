@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+//handle taskss connected to accounts
 @Service
 public class AccountsService {
     @Autowired
