@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.bank.com/types" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.bank.com/types" targetNamespace="http://www.bank.com/types">
+    <wsdl:types>
+        <xs:schema xmlns="http://www.bank.com/types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.bank.com/types">
+            <xs:element name="AuthorizationHeader">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="username" type="xs:string"/>
+                        <xs:element name="password" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="HistoryRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="accountNumber" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="HistoryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="history" type="HistoryEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="HistoryEntry">
+                <xs:sequence>
+                    <xs:element name="title" type="xs:string"/>
+                    <xs:element name="amount" type="xs:int"/>
+                    <xs:element name="source" type="xs:string"/>
+                    <xs:element name="balance" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="TransferRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="sourceAccount" type="xs:string"/>
+                        <xs:element name="destinationAccount" type="xs:string"/>
+                        <xs:element name="amount" type="xs:int"/>
+                        <xs:element name="title" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="PaymentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="message" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="WithdrawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="message" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="TransferResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="message" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="PaymentRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="amount" type="xs:int"/>
+                        <xs:element name="account" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="WithdrawRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="amount" type="xs:int"/>
+                        <xs:element name="account" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="LoginRequest">
+                <xs:complexType>
+
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="LoginResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="accounts" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="AuthorizationHeader">
+        <wsdl:part name="header" element="tns:AuthorizationHeader">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="LoginResponse">
+        <wsdl:part element="tns:LoginResponse" name="LoginResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="WithdrawResponse">
+        <wsdl:part element="tns:WithdrawResponse" name="WithdrawResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="HistoryResponse">
+        <wsdl:part element="tns:HistoryResponse" name="HistoryResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="TransferResponse">
+        <wsdl:part element="tns:TransferResponse" name="TransferResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="PaymentRequest">
+        <wsdl:part element="tns:PaymentRequest" name="PaymentRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="WithdrawRequest">
+        <wsdl:part element="tns:WithdrawRequest" name="WithdrawRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="LoginRequest">
+        <wsdl:part element="tns:LoginRequest" name="LoginRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="HistoryRequest">
+        <wsdl:part element="tns:HistoryRequest" name="HistoryRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="PaymentResponse">
+        <wsdl:part element="tns:PaymentResponse" name="PaymentResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="TransferRequest">
+        <wsdl:part element="tns:TransferRequest" name="TransferRequest">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="BankPortType">
+        <wsdl:operation name="Login">
+            <wsdl:input message="tns:LoginRequest" name="LoginRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:LoginResponse" name="LoginResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Withdraw">
+            <wsdl:input message="tns:WithdrawRequest" name="WithdrawRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:WithdrawResponse" name="WithdrawResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="History">
+            <wsdl:input message="tns:HistoryRequest" name="HistoryRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:HistoryResponse" name="HistoryResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Transfer">
+            <wsdl:input message="tns:TransferRequest" name="TransferRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:TransferResponse" name="TransferResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Payment">
+            <wsdl:input message="tns:PaymentRequest" name="PaymentRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:PaymentResponse" name="PaymentResponse">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BankPortTypeSoap11" type="tns:BankPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Login">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="LoginRequest">
+                <soap:header message="tns:AuthorizationHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="LoginResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Withdraw">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="WithdrawRequest">
+                <soap:header message="tns:AuthorizationHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="WithdrawResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="History">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="HistoryRequest">
+                <soap:header message="tns:AuthorizationHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="HistoryResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Transfer">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="TransferRequest">
+                <soap:header message="tns:AuthorizationHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="TransferResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Payment">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="PaymentRequest">
+                <soap:header message="tns:AuthorizationHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="PaymentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BankPortTypeService">
+        <wsdl:port binding="tns:BankPortTypeSoap11" name="BankPortTypeSoap11">
+            <soap:address location="http://localhost:8080/ws"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

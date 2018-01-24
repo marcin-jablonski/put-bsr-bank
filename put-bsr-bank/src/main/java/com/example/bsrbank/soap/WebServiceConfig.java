@@ -21,22 +21,13 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(applicationContext);
-        servlet.setTransformWsdlLocations(true);
         return new ServletRegistrationBean(servlet, "/ws/*");
     }
 
     @Bean(name = "bank")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema bankSchema) {
-        DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("BankPortType");
-        wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://www.bank.com/types");
-        wsdl11Definition.setSchema(bankSchema);
+    public Wsdl11Definition defaultWsdl11Definition() {
+        SimpleWsdl11Definition wsdl11Definition = new SimpleWsdl11Definition();
+        wsdl11Definition.setWsdl(new ClassPathResource("/bank.wsdl"));
         return wsdl11Definition;
-    }
-
-    @Bean
-    public XsdSchema countriesSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("types.xsd"));
     }
 }

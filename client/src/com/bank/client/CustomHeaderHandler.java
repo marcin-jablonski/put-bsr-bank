@@ -23,7 +23,6 @@ public class CustomHeaderHandler implements HandlerResolver, SOAPHandler<SOAPMes
         Boolean outboundProperty = (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
         if (outboundProperty) {
-            context.getMessage();
             try {
                 SOAPMessage message = context.getMessage();
                 SOAPPart part = message.getSOAPPart();
@@ -34,10 +33,10 @@ public class CustomHeaderHandler implements HandlerResolver, SOAPHandler<SOAPMes
                 }
 
                 SOAPHeader header = envelope.addHeader();
-                SOAPElement authorizationHeaderElement = header.addChildElement("AuthorizationHeader", "bank", "http://www.bank.com/types");
-                SOAPElement usernameElement = authorizationHeaderElement.addChildElement("username", "bank", "http://www.bank.com/types");
+                SOAPElement authorizationHeaderElement = header.addChildElement("AuthorizationHeader", "typ", "http://www.bank.com/types");
+                SOAPElement usernameElement = authorizationHeaderElement.addChildElement("username");
                 usernameElement.addTextNode(CredentialsManager.getInstance().getUsername());
-                SOAPElement passwordElement = authorizationHeaderElement.addChildElement("password", "bank", "http://www.bank.com/types");
+                SOAPElement passwordElement = authorizationHeaderElement.addChildElement("password");
                 passwordElement.addTextNode(CredentialsManager.getInstance().getPassword());
 
             } catch (Exception e) {

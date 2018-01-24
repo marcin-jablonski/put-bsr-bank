@@ -88,7 +88,7 @@
 					<verbose>true</verbose>
 					<schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
 					<schemaIncludes>
-						<include>*.xsd</include>
+						<include>*.wsdl</include>
 					</schemaIncludes>
 					<args>
 						<arg>-XtoString</arg>

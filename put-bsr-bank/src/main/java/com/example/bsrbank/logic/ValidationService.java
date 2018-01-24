@@ -67,7 +67,7 @@ public class ValidationService {
 
     public void validateAccountOwner(String accountNumber, User user) throws OperationUnavailableException, AccountNotFoundException {
         Account account = accountsService.getAccount(accountNumber);
-        if (!(account.getUser() == user)) {
+        if (!(account.getUser().getId() == user.getId())) {
             throw new OperationUnavailableException();
         }
     }
