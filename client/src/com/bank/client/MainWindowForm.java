@@ -53,10 +53,18 @@ public class MainWindowForm {
                 HistoryResponse response = null;
                 try {
                     response = bankPort.history(request);
+                    StringBuilder historyString = new StringBuilder();
+
+                    for (HistoryEntry entry :
+                            response.getHistory()) {
+                        historyString.append("[Source: ").append(entry.getSource()).append(" , title: ").append(entry.getTitle()).append(" , amount: ").append(entry.getAmount()).append(", balance after: ").append(entry.getBalance()).append("]");
+                    }
+                    JOptionPane.showMessageDialog(null, historyString.toString());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(null, response.getHistory().toString());
+
+
             }
         });
         paymentButton.addActionListener(new ActionListener() {
