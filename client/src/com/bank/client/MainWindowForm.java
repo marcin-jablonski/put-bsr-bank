@@ -73,14 +73,14 @@ public class MainWindowForm {
                 PaymentRequest request = new PaymentRequest();
                 PaymentResponse response = null;
                 try {
-                    int amount = (int) (Float.parseFloat(paymentAmountTextField.getText()) * 100);
+                    int amount = (int) (Float.parseFloat(paymentAmountTextField.getText().replace(',', '.')) * 100);
                     request.setAccount(paymentAccountTextField.getText());
                     request.setAmount(amount);
                     response = bankPort.payment(request);
+                    JOptionPane.showMessageDialog(null, response.getMessage());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(null, response.getMessage());
             }
         });
         withdrawButton.addActionListener(new ActionListener() {
@@ -89,14 +89,14 @@ public class MainWindowForm {
                 WithdrawRequest request = new WithdrawRequest();
                 WithdrawResponse response = null;
                 try {
-                    int amount = (int) (Float.parseFloat(withdrawAmountTextField.getText()) * 100);
+                    int amount = (int) (Float.parseFloat(withdrawAmountTextField.getText().replace(',', '.')) * 100);
                     request.setAccount(withdrawAccountTextField.getText());
                     request.setAmount(amount);
                     response = bankPort.withdraw(request);
+                    JOptionPane.showMessageDialog(null, response.getMessage());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(null, response.getMessage());
             }
         });
         transferButton.addActionListener(new ActionListener() {
@@ -105,16 +105,16 @@ public class MainWindowForm {
                 TransferRequest request = new TransferRequest();
                 TransferResponse response = null;
                 try {
-                    int amount = (int) (Float.parseFloat(transferAmountTextField.getText()) * 100);
+                    int amount = (int) (Float.parseFloat(transferAmountTextField.getText().replace(',', '.')) * 100);
                     request.setAmount(amount);
                     request.setTitle(transferTitleTextField.getText());
                     request.setSourceAccount(transferFromTextField.getText());
                     request.setDestinationAccount(transferToTextField.getText());
                     response = bankPort.transfer(request);
+                    JOptionPane.showMessageDialog(null, response.getMessage());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(null, response.getMessage());
             }
         });
     }
